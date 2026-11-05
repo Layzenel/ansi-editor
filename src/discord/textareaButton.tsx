@@ -42,7 +42,7 @@ export function AnsiButton({ onClick }: { onClick: () => void }) {
   }, []);
   return (
     <div ref={ref} {...{ [ATTR]: "" }} className={cls.wrap ?? "ansiEditor-tbWrap"}>
-      <Tip text={t("button.tooltip")}>
+      <Tip native text={t("button.tooltip")}>
         {(tipProps) => (
           <button
             {...tipProps}

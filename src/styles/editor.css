@@ -784,3 +784,26 @@
   outline: 2px solid var(--focus-primary, var(--ae-brand, #00b0f4));
   outline-offset: 1px;
 }
+
+/* Own tooltip (Discord look), rendered inside the overlay host */
+.ansiEditor-tooltip {
+  position: fixed;
+  z-index: 1001;
+  max-width: 260px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--ae-floating, #111214);
+  box-shadow: var(--elevation-high, 0 8px 16px rgba(0, 0, 0, 0.24));
+  color: var(--ae-text, #dbdee1);
+  font-family: var(--font-primary, sans-serif);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: pre-line;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  animation: ansiEditor-fade 0.1s ease-out;
+}
+.ansiEditor-tooltipBelow {
+  transform: translate(-50%, 0);
+}
