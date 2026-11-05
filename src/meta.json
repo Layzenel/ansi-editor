@@ -1,0 +1,7 @@
+{
+  "name": "AnsiEditor",
+  "author": "layze",
+  "description": "Визуальный редактор цветного ANSI-текста для Discord",
+  "version": "1.0.0",
+  "source": "https://github.com/layze/ansi-editor"
+}
