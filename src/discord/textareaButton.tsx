@@ -27,11 +27,11 @@ function neighbourClasses(me: HTMLElement): Classes {
     (c) => !c.hasAttribute(ATTR) && c.querySelector("button svg"),
   ) as HTMLElement | undefined;
   const btn = sib?.querySelector("button");
-  return {
-    wrap: sib?.className,
-    button: btn?.className,
-    inner: (btn?.firstElementChild as HTMLElement | null)?.className,
-  };
+  const inner = btn?.firstElementChild;
+  // SVG elements expose className as SVGAnimatedString; only copy real HTML class names.
+  const cls = (el: Element | null | undefined) =>
+    el instanceof HTMLElement && el.className ? el.className : undefined;
+  return { wrap: cls(sib), button: cls(btn), inner: cls(inner) };
 }
 
 export function AnsiButton({ onClick }: { onClick: () => void }) {

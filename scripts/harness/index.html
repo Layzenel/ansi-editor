@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- Manual smoke-test page: runs the built plugin against a mocked BdApi (no Discord needed).
+     Build first (npm run build), then open this file in a browser. -->
+<html lang="ru" class="theme-dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>AnsiEditor harness</title>
+    <style>
+      body { margin: 0; background: #313338; color: #dbdee1; font-family: sans-serif; }
+      .channelTextArea-x { margin: 40px; padding: 8px; background: #383a40; border-radius: 8px; display: flex; }
+      .channelTextArea-x [role="textbox"] { flex: 1; min-height: 22px; outline: none; }
+      .buttons-x { display: flex; gap: 4px; }
+      .buttonContainer-x button { background: none; border: 0; color: #b5bac1; cursor: pointer; }
+      #log { margin: 40px; white-space: pre-wrap; font-family: monospace; font-size: 12px; }
+    </style>
+    <script src="../../node_modules/react/umd/react.development.js"></script>
+    <script src="../../node_modules/react-dom/umd/react-dom.development.js"></script>
+    <script src="./mock-bdapi.js"></script>
+  </head>
+  <body>
+    <div id="app-mount">
+      <div class="channelTextArea-x">
+        <div role="textbox" contenteditable="true" id="chatbox"></div>
+        <div class="buttons-x">
+          <div class="buttonContainer-x"><button><svg width="20" height="20"></svg></button></div>
+        </div>
+      </div>
+      <div id="log"></div>
+    </div>
+    <script>var module = { exports: {} };</script>
+    <script src="../../dist/AnsiEditor.plugin.js"></script>
+    <script>
+      window.plugin = new module.exports();
+      window.plugin.start();
+    </script>
+  </body>
+</html>

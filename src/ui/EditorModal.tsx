@@ -151,9 +151,23 @@ export function EditorModal({ options, onClose }: { options: EditorOptions; onCl
     return () => (clearTimeout(id), ro.disconnect());
   }, []);
 
+  // Keep focus inside the modal: after switching views or closing a panel, return to the editor.
   useEffect(() => {
-    editorRef.current?.focus();
-  }, [view]);
+    if (!panel && !confirm) editorRef.current?.focus();
+  }, [view, panel, confirm]);
+
+  // If focus still escapes to <body> (e.g. a focused control unmounted), Escape must keep working.
+  const escRef = useRef<() => void>(() => {});
+  escRef.current = () => (panel ? setPanel(null) : confirm ? setConfirm(null) : requestClose());
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || document.activeElement !== document.body) return;
+      e.preventDefault();
+      escRef.current();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const ui = useMemo(() => storage.getUi(), []);
 

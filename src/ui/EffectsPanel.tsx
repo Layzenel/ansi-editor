@@ -122,7 +122,8 @@ export function EffectsPanel({ doc, sel, onApply }: EffectsPanelProps) {
         {cur.colors.map((c, i) => (
           <select
             key={i}
-            className={`ansiEditor-select ansiEditor-colorSelect ansiEditor-swatch-${codeFor(cur.layer, c)}`}
+            className="ansiEditor-select ansiEditor-colorSelect"
+            style={{ backgroundColor: `var(--ansi-${cur.layer}-${codeFor(cur.layer, c)})` }}
             value={c}
             aria-label={`${t("effects.colors")} ${i + 1}`}
             onChange={(e) => {
