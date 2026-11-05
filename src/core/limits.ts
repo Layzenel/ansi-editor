@@ -10,7 +10,10 @@ export const NITRO_LIMIT = 4000;
  * Message length limit for a user. premiumType: 1 = Nitro Classic, 2 = Nitro, 3 = Nitro Basic.
  * Nitro Basic does not include longer messages.
  */
-export function messageLimit(setting: LimitSetting, premiumType: number | null | undefined): number {
+export function messageLimit(
+  setting: LimitSetting,
+  premiumType: number | null | undefined,
+): number {
   if (setting === "2000") return BASE_LIMIT;
   if (setting === "4000") return NITRO_LIMIT;
   return premiumType === 1 || premiumType === 2 ? NITRO_LIMIT : BASE_LIMIT;
@@ -31,7 +34,11 @@ export function limitLevel(total: number, limit: number): LimitLevel {
   return "ok";
 }
 
-export function lengthInfo(doc: Doc, options: Partial<SerializeOptions>, limit: number): LengthInfo {
+export function lengthInfo(
+  doc: Doc,
+  options: Partial<SerializeOptions>,
+  limit: number,
+): LengthInfo {
   const parts = serializeParts(doc, options);
   const total = parts.output.length;
   return { ...parts, total, limit, level: limitLevel(total, limit) };

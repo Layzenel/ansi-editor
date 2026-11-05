@@ -1,0 +1,786 @@
+/* ANSI Editor — all classes are prefixed with ansiEditor-; colors come from Discord CSS variables. */
+
+.ansiEditor-host {
+  --ae-bg: var(--background-primary, var(--background-base-low, #313338));
+  --ae-bg2: var(--background-secondary, var(--background-base-lower, #2b2d31));
+  --ae-bg3: var(--background-tertiary, var(--background-base-lowest, #1e1f22));
+  --ae-floating: var(--background-floating, var(--background-surface-highest, #111214));
+  --ae-text: var(--text-normal, var(--text-default, #dbdee1));
+  --ae-muted: var(--text-muted, #949ba4);
+  --ae-header: var(--header-primary, var(--text-strong, #f2f3f5));
+  --ae-int: var(--interactive-normal, var(--interactive-text-default, #b5bac1));
+  --ae-int-hover: var(--interactive-hover, var(--interactive-text-hover, #dbdee1));
+  --ae-int-active: var(--interactive-active, var(--interactive-text-active, #ffffff));
+  --ae-brand: var(--brand-500, var(--brand-experiment, #5865f2));
+  --ae-brand-hover: var(--brand-560, var(--brand-experiment-560, #4752c4));
+  --ae-danger: var(--status-danger, #da373c);
+  --ae-warning: var(--status-warning, #f0b232);
+  --ae-border: var(--background-modifier-accent, var(--border-subtle, rgba(255, 255, 255, 0.08)));
+  --ae-hover: var(--background-modifier-hover, rgba(78, 80, 88, 0.3));
+  --ae-selected: var(--background-modifier-selected, rgba(78, 80, 88, 0.6));
+  --ae-radius: 8px;
+  font-family: var(--font-primary, "gg sans", "Noto Sans", sans-serif);
+  color: var(--ae-text);
+}
+
+/* Palette (CSS variables from PALETTE, overridable by themes) */
+.ansiEditor-fg-30 {
+  color: var(--ansi-fg-30);
+}
+.ansiEditor-fg-31 {
+  color: var(--ansi-fg-31);
+}
+.ansiEditor-fg-32 {
+  color: var(--ansi-fg-32);
+}
+.ansiEditor-fg-33 {
+  color: var(--ansi-fg-33);
+}
+.ansiEditor-fg-34 {
+  color: var(--ansi-fg-34);
+}
+.ansiEditor-fg-35 {
+  color: var(--ansi-fg-35);
+}
+.ansiEditor-fg-36 {
+  color: var(--ansi-fg-36);
+}
+.ansiEditor-fg-37 {
+  color: var(--ansi-fg-37);
+}
+.ansiEditor-bg-40 {
+  background-color: var(--ansi-bg-40);
+}
+.ansiEditor-bg-41 {
+  background-color: var(--ansi-bg-41);
+}
+.ansiEditor-bg-42 {
+  background-color: var(--ansi-bg-42);
+}
+.ansiEditor-bg-43 {
+  background-color: var(--ansi-bg-43);
+}
+.ansiEditor-bg-44 {
+  background-color: var(--ansi-bg-44);
+}
+.ansiEditor-bg-45 {
+  background-color: var(--ansi-bg-45);
+}
+.ansiEditor-bg-46 {
+  background-color: var(--ansi-bg-46);
+}
+.ansiEditor-bg-47 {
+  background-color: var(--ansi-bg-47);
+}
+.ansiEditor-b {
+  font-weight: 700;
+}
+.ansiEditor-u {
+  text-decoration: underline;
+}
+
+/* Text-area button fallback (when neighbour classes could not be copied) */
+.ansiEditor-tbWrap {
+  display: flex;
+  align-items: center;
+}
+.ansiEditor-tbButton {
+  cursor: pointer;
+  color: var(--interactive-normal, #b5bac1);
+  background: none;
+  border: 0;
+}
+.ansiEditor-tbButton:hover {
+  color: var(--interactive-hover, #dbdee1);
+}
+.ansiEditor-tbInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+/* Overlay + modal */
+.ansiEditor-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  animation: ansiEditor-fade 0.15s ease-out;
+}
+.ansiEditor-closing {
+  animation: ansiEditor-fadeOut 0.15s ease-in forwards;
+}
+.ansiEditor-closing .ansiEditor-modal {
+  animation: ansiEditor-popOut 0.15s ease-in forwards;
+}
+@keyframes ansiEditor-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes ansiEditor-fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes ansiEditor-pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+@keyframes ansiEditor-popOut {
+  to {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+.ansiEditor-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 560px;
+  min-height: 420px;
+  max-width: 96vw;
+  max-height: 92vh;
+  resize: both;
+  overflow: hidden;
+  background: var(--ae-bg);
+  border-radius: var(--ae-radius);
+  box-shadow: var(--elevation-high, 0 8px 16px rgba(0, 0, 0, 0.24));
+  animation: ansiEditor-pop 0.2s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+.ansiEditor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 8px;
+}
+.ansiEditor-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--ae-header);
+}
+.ansiEditor-close {
+  display: flex;
+  padding: 4px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ae-int);
+  cursor: pointer;
+}
+.ansiEditor-close:hover {
+  color: var(--ae-int-hover);
+}
+
+/* Toolbar */
+.ansiEditor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--ae-border);
+}
+.ansiEditor-toolGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ansiEditor-toolButtons {
+  gap: 2px;
+}
+.ansiEditor-toolLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--ae-muted);
+}
+.ansiEditor-divider {
+  width: 1px;
+  height: 20px;
+  margin: 0 6px;
+  background: var(--ae-border);
+}
+.ansiEditor-palette {
+  display: flex;
+  gap: 4px;
+}
+
+.ansiEditor-swatch {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.ansiEditor-swatch-30 {
+  background: var(--ansi-fg-30);
+}
+.ansiEditor-swatch-31 {
+  background: var(--ansi-fg-31);
+}
+.ansiEditor-swatch-32 {
+  background: var(--ansi-fg-32);
+}
+.ansiEditor-swatch-33 {
+  background: var(--ansi-fg-33);
+}
+.ansiEditor-swatch-34 {
+  background: var(--ansi-fg-34);
+}
+.ansiEditor-swatch-35 {
+  background: var(--ansi-fg-35);
+}
+.ansiEditor-swatch-36 {
+  background: var(--ansi-fg-36);
+}
+.ansiEditor-swatch-37 {
+  background: var(--ansi-fg-37);
+}
+.ansiEditor-swatch-40 {
+  background: var(--ansi-bg-40);
+}
+.ansiEditor-swatch-41 {
+  background: var(--ansi-bg-41);
+}
+.ansiEditor-swatch-42 {
+  background: var(--ansi-bg-42);
+}
+.ansiEditor-swatch-43 {
+  background: var(--ansi-bg-43);
+}
+.ansiEditor-swatch-44 {
+  background: var(--ansi-bg-44);
+}
+.ansiEditor-swatch-45 {
+  background: var(--ansi-bg-45);
+}
+.ansiEditor-swatch-46 {
+  background: var(--ansi-bg-46);
+}
+.ansiEditor-swatch-47 {
+  background: var(--ansi-bg-47);
+}
+.ansiEditor-swatchNone {
+  background:
+    linear-gradient(
+      135deg,
+      transparent 45%,
+      var(--ae-danger) 45%,
+      var(--ae-danger) 55%,
+      transparent 55%
+    ),
+    var(--ae-bg3);
+}
+.ansiEditor-swatchActive {
+  outline: 2px solid var(--ae-int-active);
+  outline-offset: 1px;
+}
+.ansiEditor-swatchPartial {
+  outline-style: dashed;
+}
+
+.ansiEditor-iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ae-int);
+  cursor: pointer;
+}
+.ansiEditor-iconButton:hover:not(:disabled) {
+  background: var(--ae-hover);
+  color: var(--ae-int-hover);
+}
+.ansiEditor-iconButton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.ansiEditor-pressed {
+  background: var(--ae-selected);
+  color: var(--ae-int-active);
+}
+.ansiEditor-partial {
+  background: var(--ae-hover);
+  color: var(--ae-int-hover);
+  box-shadow: inset 0 -2px 0 var(--ae-int);
+}
+
+/* Body */
+.ansiEditor-body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.ansiEditor-split2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  padding: 12px 16px;
+}
+.ansiEditor-body > .ansiEditor-pane {
+  flex: 1;
+  padding: 12px 16px;
+}
+.ansiEditor-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.ansiEditor-code {
+  font-family: var(--font-code, Consolas, "Andale Mono WT", monospace);
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ansiEditor-editor {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.5em;
+  border: 1px solid var(--ae-border);
+  border-radius: 4px;
+  background: var(--ae-bg2);
+  color: var(--ae-text);
+  outline: none;
+  caret-color: var(--ae-int-active);
+  tab-size: 4;
+}
+.ansiEditor-editor:focus-visible {
+  box-shadow: 0 0 0 2px var(--ae-brand);
+}
+.ansiEditor-editor[data-empty]::before {
+  content: attr(data-placeholder);
+  position: absolute;
+  color: var(--ae-muted);
+  pointer-events: none;
+}
+.ansiEditor-marked {
+  outline: 1px dashed var(--ae-int-active);
+  outline-offset: -1px;
+  background-image: linear-gradient(var(--ae-hover), var(--ae-hover));
+}
+
+/* Preview: looks like a Discord code block */
+.ansiEditor-previewWrap {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.ansiEditor-preview {
+  margin: 0;
+  padding: 0.5em;
+  border: 1px solid var(--ae-bg3);
+  border-radius: 4px;
+  background: var(--ae-bg2);
+  color: var(--ae-text);
+}
+.ansiEditor-panel .ansiEditor-previewWrap {
+  flex: none;
+  max-height: 120px;
+}
+
+.ansiEditor-raw {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 8px;
+}
+.ansiEditor-rawCode {
+  flex: 1;
+  margin: 0;
+  overflow: auto;
+  padding: 0.5em;
+  border-radius: 4px;
+  background: var(--ae-bg3);
+  color: var(--ae-text);
+}
+.ansiEditor-rawText {
+  flex: 1;
+  resize: none;
+  padding: 0.5em;
+  border: 1px solid var(--ae-border);
+  border-radius: 4px;
+  background: var(--ae-bg3);
+  color: var(--ae-text);
+}
+.ansiEditor-esc {
+  color: var(--ae-brand);
+  opacity: 0.85;
+}
+.ansiEditor-rawActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Tabs */
+.ansiEditor-tabs {
+  display: flex;
+  gap: 4px;
+}
+.ansiEditor-tab {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ae-int);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.ansiEditor-tab:hover {
+  background: var(--ae-hover);
+  color: var(--ae-int-hover);
+}
+.ansiEditor-tabActive {
+  background: var(--ae-selected);
+  color: var(--ae-int-active);
+}
+
+/* Drawer panels (effects / presets) */
+.ansiEditor-drawer {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  z-index: 2;
+  width: min(380px, calc(100% - 32px));
+  max-height: calc(100% - 16px);
+  overflow: auto;
+  border-radius: var(--ae-radius);
+  background: var(--ae-floating);
+  box-shadow: var(--elevation-high, 0 8px 16px rgba(0, 0, 0, 0.24));
+}
+.ansiEditor-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+.ansiEditor-panelRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.ansiEditor-panelFooter {
+  justify-content: space-between;
+}
+.ansiEditor-panelTitle {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ae-header);
+}
+.ansiEditor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ae-muted);
+}
+.ansiEditor-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+.ansiEditor-select,
+.ansiEditor-input {
+  padding: 6px 8px;
+  border: 1px solid var(--ae-border);
+  border-radius: 4px;
+  background: var(--ae-bg3);
+  color: var(--ae-text);
+  font: inherit;
+  font-size: 14px;
+}
+.ansiEditor-input {
+  flex: 1;
+  min-width: 120px;
+}
+.ansiEditor-colorSelect {
+  width: 36px;
+  color: transparent;
+}
+.ansiEditor-colorSelect option {
+  color: var(--ae-text);
+  background: var(--ae-bg3);
+}
+.ansiEditor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ansiEditor-listItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ansiEditor-listMain {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ae-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ansiEditor-listMain:hover {
+  background: var(--ae-hover);
+}
+.ansiEditor-sample {
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.ansiEditor-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ansiEditor-kbd {
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--ae-bg3);
+  color: var(--ae-muted);
+  font-size: 11px;
+}
+
+/* Banner */
+.ansiEditor-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 16px 0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--ae-bg2);
+  font-size: 14px;
+}
+.ansiEditor-banner > span {
+  flex: 1;
+}
+
+/* Footer */
+.ansiEditor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--ae-bg2);
+}
+.ansiEditor-footerLeft,
+.ansiEditor-footerRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ansiEditor-counter {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ae-muted);
+}
+.ansiEditor-counter-warning {
+  color: var(--ae-warning);
+}
+.ansiEditor-counter-error {
+  color: var(--ae-danger);
+  font-weight: 600;
+}
+.ansiEditor-hint {
+  display: flex;
+  color: var(--ae-muted);
+}
+.ansiEditor-error {
+  font-size: 13px;
+  color: var(--ae-danger);
+}
+.ansiEditor-muted {
+  font-size: 13px;
+  color: var(--ae-muted);
+}
+
+/* Buttons (Discord look) */
+.ansiEditor-btn {
+  min-height: 32px;
+  padding: 2px 16px;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.17s ease;
+}
+.ansiEditor-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.ansiEditor-btnPrimary {
+  background: var(--ae-brand);
+  color: #fff;
+}
+.ansiEditor-btnPrimary:hover:not(:disabled) {
+  background: var(--ae-brand-hover);
+}
+.ansiEditor-btnSecondary {
+  background: var(--button-secondary-background, #4e5058);
+  color: #fff;
+}
+.ansiEditor-btnSecondary:hover:not(:disabled) {
+  background: var(--button-secondary-background-hover, #6d6f78);
+}
+.ansiEditor-btnDanger {
+  background: var(--ae-danger);
+  color: #fff;
+}
+.ansiEditor-btnLink {
+  padding: 2px 4px;
+  background: none;
+  color: var(--text-link, #00a8fc);
+}
+.ansiEditor-btnLink:hover {
+  text-decoration: underline;
+}
+.ansiEditor-btnSmall {
+  min-height: 24px;
+  padding: 2px 8px;
+}
+.ansiEditor-split {
+  position: relative;
+  display: flex;
+}
+.ansiEditor-split > .ansiEditor-btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+.ansiEditor-splitToggle {
+  display: flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0 4px 4px 0;
+}
+.ansiEditor-menu {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: var(--ae-floating);
+  box-shadow: var(--elevation-high, 0 8px 16px rgba(0, 0, 0, 0.24));
+}
+.ansiEditor-menuItem {
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 2px;
+  background: none;
+  color: var(--ae-text);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+.ansiEditor-menuItem:hover {
+  background: var(--ae-brand);
+  color: #fff;
+}
+
+/* Confirm */
+.ansiEditor-confirmBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+.ansiEditor-confirm {
+  width: 360px;
+  max-width: 90%;
+  padding: 16px;
+  border-radius: var(--ae-radius);
+  background: var(--ae-bg);
+  box-shadow: var(--elevation-high, 0 8px 16px rgba(0, 0, 0, 0.24));
+}
+.ansiEditor-confirmText {
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: var(--ae-header);
+}
+.ansiEditor-confirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Settings fallback */
+.ansiEditor-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text-normal, #dbdee1);
+}
+.ansiEditor-settingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ansiEditor-settingName {
+  font-size: 16px;
+  font-weight: 500;
+}
+.ansiEditor-hotkey {
+  min-width: 160px;
+  font-family: var(--font-code, monospace);
+}
+
+/* Focus visibility */
+.ansiEditor-host :is(button, select, input, textarea, [tabindex="0"]):focus-visible,
+.ansiEditor-settings :is(button, select, input):focus-visible {
+  outline: 2px solid var(--focus-primary, var(--ae-brand, #00b0f4));
+  outline-offset: 1px;
+}

@@ -105,9 +105,4 @@ declare global {
   const DiscordNative: { clipboard?: { copy(text: string): void } } | undefined;
 }
 
-declare module "*.css" {
-  const css: string;
-  export default css;
-}
-
 export {};

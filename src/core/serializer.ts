@@ -72,7 +72,7 @@ export function transition(cur: Style, next: Style): string {
 }
 
 export function escapeTripleBackticks(text: string): string {
-  return text.replace(/```/g, "`​`​`");
+  return text.replace(/```/g, "`200b`200b`");
 }
 
 function transformText(text: string, opts: SerializeOptions): string {

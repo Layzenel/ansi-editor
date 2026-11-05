@@ -61,7 +61,9 @@ describe("history", () => {
 describe("effects", () => {
   it("rainbow colors characters and skips spaces", () => {
     const r = rainbow(doc(run("ab c")), 0, 4);
-    expect(r).toEqual(doc(run("a", { fg: 31 }), run("b", { fg: 33 }), run(" "), run("c", { fg: 32 })));
+    expect(r).toEqual(
+      doc(run("a", { fg: 31 }), run("b", { fg: 33 }), run(" "), run("c", { fg: 32 })),
+    );
   });
 
   it("rainbow on background and by word", () => {

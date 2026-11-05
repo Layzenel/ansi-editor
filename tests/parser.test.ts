@@ -68,7 +68,7 @@ describe("parseAnsi", () => {
 
   it("normalizes CRLF and removes own backtick escaping", () => {
     expect(parseAnsi("a\r\nb").doc).toEqual(doc(run("a\nb")));
-    expect(parseAnsi("`​`​`").doc).toEqual(doc(run("```")));
+    expect(parseAnsi("`200b`200b`").doc).toEqual(doc(run("```")));
   });
 
   it("returns an empty doc for empty input", () => {

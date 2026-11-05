@@ -129,7 +129,10 @@ export function replaceRange(doc: Doc, start: number, end: number, other: Doc): 
 /** Maps the style of every character in [start, end). */
 export function mapStyle(doc: Doc, start: number, end: number, fn: (s: Style) => Style): Doc {
   const r = snapRange(doc, start, end);
-  const mid = rawSlice(doc, r.start, r.end).map((run) => ({ text: run.text, style: fn(run.style) }));
+  const mid = rawSlice(doc, r.start, r.end).map((run) => ({
+    text: run.text,
+    style: fn(run.style),
+  }));
   return normalize([...rawSlice(doc, 0, r.start), ...mid, ...rawSlice(doc, r.end, docLength(doc))]);
 }
 

@@ -45,7 +45,7 @@ describe("serialize", () => {
   });
 
   it("escapes triple backticks, also across runs of equal text", () => {
-    expect(serialize(doc(run("a```b")), raw)).toBe("a`​`​`b");
+    expect(serialize(doc(run("a```b")), raw)).toBe("a`200b`200b`b");
     expect(serialize(doc(run("a```b")), { ...raw, escapeBackticks: false })).toBe("a```b");
     // An escape code between backticks already breaks the fence.
     expect(serialize(doc(run("``"), run("`", { fg: 31 })), raw)).toBe(`\`\`${E}[31m\`${E}[0m`);

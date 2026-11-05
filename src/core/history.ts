@@ -46,7 +46,13 @@ export function canRedo<T>(h: History<T>): boolean {
 export function undo<T>(h: History<T>): History<T> {
   if (!h.past.length) return h;
   const past = h.past.slice(0, -1);
-  return { past, present: h.past[h.past.length - 1], future: [h.present, ...h.future], group: null, time: 0 };
+  return {
+    past,
+    present: h.past[h.past.length - 1],
+    future: [h.present, ...h.future],
+    group: null,
+    time: 0,
+  };
 }
 
 export function redo<T>(h: History<T>): History<T> {

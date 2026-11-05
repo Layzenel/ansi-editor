@@ -84,7 +84,7 @@ export function parseAnsi(input: string, options: ParseOptions = {}): ParseResul
   let text = input.replace(/\r\n?/g, "\n");
   if (options.literalEscapes) text = text.replace(LITERAL_RE, ESC);
   // Undo our own triple-backtick escaping (zero-width spaces between backticks).
-  text = text.replace(/`​(?=`)/g, "`");
+  text = text.replace(/`200b(?=`)/g, "`");
 
   const warnings: ParseWarnings = { unsupportedCodes: 0, strippedSequences: 0 };
   const doc: Doc = [];

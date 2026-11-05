@@ -50,7 +50,12 @@ export function effectUnits(text: string, step: EffectStep, skipSpaces: boolean)
 }
 
 /** Colors consecutive units of the range with a repeating list of colors. */
-export function applyColorCycle(doc: Doc, start: number, end: number, opts: ColorCycleOptions): Doc {
+export function applyColorCycle(
+  doc: Doc,
+  start: number,
+  end: number,
+  opts: ColorCycleOptions,
+): Doc {
   if (!opts.colors.length || start >= end) return doc;
   const part = sliceDoc(doc, start, end);
   const text = part.map((r) => r.text).join("");
@@ -83,10 +88,19 @@ function recolor(doc: Doc, r: Range, layer: Layer, code: number): Doc {
   return out;
 }
 
-export const rainbow = (doc: Doc, start: number, end: number, opts: Partial<ColorCycleOptions> = {}) =>
-  applyColorCycle(doc, start, end, { ...DEFAULT_RAINBOW, ...opts });
+export const rainbow = (
+  doc: Doc,
+  start: number,
+  end: number,
+  opts: Partial<ColorCycleOptions> = {},
+) => applyColorCycle(doc, start, end, { ...DEFAULT_RAINBOW, ...opts });
 
-export const alternate = (doc: Doc, start: number, end: number, opts: Partial<ColorCycleOptions> = {}) =>
+export const alternate = (
+  doc: Doc,
+  start: number,
+  end: number,
+  opts: Partial<ColorCycleOptions> = {},
+) =>
   applyColorCycle(doc, start, end, {
     ...DEFAULT_ALTERNATE,
     ...opts,
