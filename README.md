@@ -1,85 +1,86 @@
-# ANSI Editor — плагин BetterDiscord
+# ANSI Editor — a BetterDiscord plugin
 
-Визуальный редактор цветного текста для Discord. Кнопка в поле ввода открывает окно, где текст красится
-как в обычном редакторе, а на выходе получается блок ` ```ansi `, который вставляется в чат или
-отправляется сразу.
+A visual editor for colored text in Discord. A button in the message box opens a window where you
+color text like in a regular editor. The result is an ` ```ansi ` block that is inserted into the
+message box or sent right away.
 
-## Установка
+## Installation
 
-1. Скачайте [`AnsiEditor.plugin.js`](AnsiEditor.plugin.js) из корня репозитория.
-2. Положите файл в папку плагинов BetterDiscord:
+1. Download [`AnsiEditor.plugin.js`](AnsiEditor.plugin.js) from the root of this repository.
+2. Put the file into the BetterDiscord plugins folder:
    - Windows: `%APPDATA%\BetterDiscord\plugins`
    - macOS: `~/Library/Application Support/BetterDiscord/plugins`
    - Linux: `~/.config/BetterDiscord/plugins`
-3. Включите **AnsiEditor** в Настройки → BetterDiscord → Плагины.
+3. Enable **AnsiEditor** in Settings → BetterDiscord → Plugins.
 
-## Возможности
+## Features
 
-- Кнопка в ряду иконок поля ввода (в начале или в конце), горячая клавиша открытия `Ctrl+Shift+A`.
-- WYSIWYG-редактор: 8 цветов текста, 8 цветов фона, жирный, подчёркивание, сброс стиля.
-- Индикатор стиля под курсором, «частичное» состояние для смешанного выделения.
-- Пипетка: `Alt+клик` по свотчу выделяет весь текст этого цвета.
-- Живое превью «как в Discord» и вкладка «Код» с видимыми escape-последовательностями
-  (можно править как текст).
-- Эффекты: радуга и чередование (по символам, словам или строкам, на тексте или фоне) с мини-превью.
-- Пресеты стиля (`Alt+1…9`), недавние документы, автосохранение черновика.
-- Undo/redo на 100 шагов, набор склеивается в один шаг.
-- Счётчик длины с разбивкой (текст / escape-коды / обёртка), лимит 2000/4000 по Nitro,
-  кнопка «Оптимизировать».
-- Импорт: из поля ввода, из буфера обмена, вставкой текста с ANSI (в том числе текстовых `\u001b`),
-  из сообщения через контекстное меню.
-- Контекстное меню сообщения → ANSI: открыть в редакторе, редактировать своё сообщение
-  (меняется только ANSI-блок), копировать как ANSI-код или как обычный текст.
-- Русский и английский интерфейс (по языку клиента Discord).
+- A button in the message box icon row (first or last), and an open hotkey, `Ctrl+Shift+A`.
+- WYSIWYG editor: 8 text colors, 8 background colors, bold, underline, style reset.
+- Style indicator for the text under the caret, with a "partial" state for mixed selections.
+- Eyedropper: `Alt+click` on a swatch selects all text with that color.
+- Live preview that looks like Discord, and a Code tab with visible escape sequences
+  (editable as plain text).
+- Effects: rainbow and alternate (by character, word or line, on text or background), with a preview.
+- Style presets (`Alt+1…9`), recent documents, draft autosave.
+- Undo/redo for 100 steps; consecutive typing is merged into one step.
+- Length counter with a breakdown (text / escape codes / wrapper), a 2000 or 4000 limit depending on
+  Nitro, and an Optimize button.
+- Import from the message box, from the clipboard, by pasting ANSI text (including typed `\u001b`),
+  or from a message through the context menu.
+- Message context menu → ANSI: open in the editor, edit your own message (only the ANSI block
+  changes), copy as ANSI code or as plain text.
+- English and Russian interface, picked from the Discord client language.
 
-### Горячие клавиши в редакторе
+### Editor hotkeys
 
-| Сочетание | Действие |
+| Keys | Action |
 | --- | --- |
-| `Ctrl+B` / `Ctrl+U` | Жирный / подчёркивание |
-| `Ctrl+Z` / `Ctrl+Shift+Z`, `Ctrl+Y` | Отменить / повторить |
-| `Ctrl+Space` | Сбросить стиль выделения |
-| `Alt+1…9` | Применить пресет |
-| `Ctrl+Enter` | Основное действие (вставить / отправить / копировать) |
-| `Ctrl+Shift+C` | Копировать ANSI-блок |
-| `Esc` | Закрыть (с подтверждением при изменениях) |
+| `Ctrl+B` / `Ctrl+U` | Bold / underline |
+| `Ctrl+Z` / `Ctrl+Shift+Z`, `Ctrl+Y` | Undo / redo |
+| `Ctrl+Space` | Reset the selection style |
+| `Alt+1…9` | Apply a preset |
+| `Ctrl+Enter` | Primary action (insert / send / copy) |
+| `Ctrl+Shift+C` | Copy the ANSI block |
+| `Esc` | Close (asks for confirmation if there are changes) |
 
-## Ограничения
+## Limitations
 
-- Discord рендерит только 8 цветов текста, 8 цветов фона, жирный и подчёркивание. Курсив, 256 цветов
-  и truecolor не поддерживаются, редактор их не предлагает (при импорте они отбрасываются с предупреждением).
-- На мобильных клиентах Discord ANSI-блок показывается без цветов, обычным кодом.
-- Escape-коды входят в лимит длины сообщения.
-- ` ``` ` внутри текста экранируется невидимыми пробелами, иначе блок закрылся бы раньше.
-- «Отправить» сбросило бы ответ на сообщение, поэтому при активном ответе используется вставка.
+- Discord renders only 8 text colors, 8 background colors, bold and underline. Italic, 256 colors
+  and truecolor are not supported, so the editor does not offer them (on import they are dropped with
+  a warning).
+- Discord mobile clients show the ANSI block as plain code, without colors.
+- Escape codes count towards the message length limit.
+- ` ``` ` inside the text is broken up with zero-width spaces, otherwise the block would close early.
+- Send would drop a pending reply, so while you are replying, Insert is used instead.
 
-## Разработка
+## Development
 
-Нужен Node.js 20+.
+Requires Node.js 20+.
 
 ```bash
 npm install
-npm run build      # AnsiEditor.plugin.js в корне (коммитится — его читает сайт BetterDiscord)
-npm run dev        # watch + копирование в папку плагинов BD (BD_PLUGINS_DIR переопределяет путь)
-npm run deploy     # одна сборка + копирование
-npm test           # Vitest, только src/core
-npm run coverage   # покрытие core/ (порог 90% строк)
+npm run build      # AnsiEditor.plugin.js in the repo root (committed: the BetterDiscord site reads it)
+npm run dev        # watch + copy into the BD plugins folder (BD_PLUGINS_DIR overrides the path)
+npm run deploy     # one build + copy
+npm test           # Vitest, src/core only
+npm run coverage   # core/ coverage (90% line threshold)
 npm run lint
 npm run typecheck
 ```
 
-Стенд без Discord: `node scripts/harness/serve.mjs` и откройте
-<http://localhost:5179/scripts/harness/index.html> — плагин запускается с мок-BdApi
-(кнопка через DOM-fallback, вставка пишет в фейковое поле ввода).
+Test page without Discord: run `node scripts/harness/serve.mjs` and open
+<http://localhost:5179/scripts/harness/index.html>. The plugin runs against a mocked BdApi
+(the button uses the DOM fallback, and inserting writes into a fake message box).
 
-### Устройство
+### Architecture
 
-- `src/core/` — чистая логика без DOM и BdApi: модель документа (run’ы со стилем), парсер,
-  сериализатор с минимальными переходами, эффекты, лимиты, история. Источник истины — модель,
-  DOM редактора никогда не парсится обратно.
-- `src/discord/` — всё, что зависит от внутренностей Discord. Каждый webpack-поиск имеет fallback:
-  кнопка — патч компонента ряда кнопок, а если он не найден за 5 с — MutationObserver;
-  вставка — `ComponentDispatch INSERT_TEXT`, иначе буфер обмена.
-- `src/ui/` — React из `BdApi.React`, свой оверлей с CSS-переменными Discord.
-- Палитра (`PALETTE` в `src/core/palette.ts`) — Solarized из генератора rebane2001. Перед релизом
-  её стоит сверить с реальным рендером Discord.
+- `src/core/` — pure logic with no DOM or BdApi: the document model (styled runs), parser,
+  serializer with minimal transitions, effects, limits, history. The model is the source of truth;
+  the editor DOM is never parsed back.
+- `src/discord/` — everything that depends on Discord internals. Every webpack lookup has a fallback:
+  the button patches the button row component, or uses a MutationObserver if the component is not
+  found within 5 seconds; inserting uses `ComponentDispatch INSERT_TEXT`, or the clipboard otherwise.
+- `src/ui/` — React from `BdApi.React`, with its own overlay styled with Discord CSS variables.
+- The palette (`PALETTE` in `src/core/palette.ts`) is Solarized, taken from rebane2001's generator.
+  It should be checked against Discord's real rendering before a release.
