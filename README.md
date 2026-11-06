@@ -4,6 +4,12 @@ A visual editor for colored text in Discord. A button in the message box opens a
 color text like in a regular editor. The result is an ` ```ansi ` block that is inserted into the
 message box or sent right away.
 
+![Editor with live preview](docs/editor.png)
+
+| Code view | Effects |
+| --- | --- |
+| ![Code view with visible escape sequences](docs/code.png) | ![Rainbow effect panel with preview](docs/effects.png) |
+
 ## Installation
 
 1. Download [`AnsiEditor.plugin.js`](AnsiEditor.plugin.js) from the root of this repository.
