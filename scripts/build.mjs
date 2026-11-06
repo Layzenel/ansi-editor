@@ -1,4 +1,4 @@
-// Production build: bundles src/index.tsx into dist/AnsiEditor.plugin.js with the BetterDiscord meta header.
+// Production build: bundles src/index.tsx into AnsiEditor.plugin.js (repo root, committed: the BetterDiscord site reads it from GitHub).
 // Flags: --watch (rebuild on change), --deploy (copy the result into the BetterDiscord plugins folder).
 import { build, context } from "esbuild";
 import { copyFileSync, mkdirSync, readFileSync } from "node:fs";
@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const meta = JSON.parse(readFileSync(join(root, "src/meta.json"), "utf8"));
-const outfile = join(root, "dist/AnsiEditor.plugin.js");
+const outfile = join(root, "AnsiEditor.plugin.js");
 const args = new Set(process.argv.slice(2));
 
 const banner = [

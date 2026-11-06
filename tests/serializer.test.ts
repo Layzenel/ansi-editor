@@ -45,7 +45,9 @@ describe("serialize", () => {
   });
 
   it("escapes triple backticks, also across runs of equal text", () => {
-    expect(serialize(doc(run("a```b")), raw)).toBe("a`200b`200b`b");
+    // Zero-width space by code point, independent of how the source escapes it.
+    const zw = String.fromCharCode(0x200b);
+    expect(serialize(doc(run("a```b")), raw)).toBe(`a\`${zw}\`${zw}\`b`);
     expect(serialize(doc(run("a```b")), { ...raw, escapeBackticks: false })).toBe("a```b");
     // An escape code between backticks already breaks the fence.
     expect(serialize(doc(run("``"), run("`", { fg: 31 })), raw)).toBe(`\`\`${E}[31m\`${E}[0m`);

@@ -1,7 +1,7 @@
 {
   "name": "AnsiEditor",
   "author": "Layzenel",
-  "description": "Визуальный редактор цветного ANSI-текста для Discord",
+  "description": "Visual editor for colored ANSI text in Discord messages",
   "version": "1.0.0",
   "source": "https://github.com/Layzenel/ansi-editor"
 }

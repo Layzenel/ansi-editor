@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractAnsiBlocks, hasAnsi, parseAnsi, parseMessage } from "../src/core/parser";
+import { extractAnsiBlocks, hasAnsi, parseAnsi, parseMessage, ZWSP } from "../src/core/parser";
 import { E, doc, run } from "./helpers";
 
 describe("parseAnsi", () => {
@@ -68,7 +68,8 @@ describe("parseAnsi", () => {
 
   it("normalizes CRLF and removes own backtick escaping", () => {
     expect(parseAnsi("a\r\nb").doc).toEqual(doc(run("a\nb")));
-    expect(parseAnsi("`200b`200b`").doc).toEqual(doc(run("```")));
+    expect(parseAnsi(`\`${ZWSP}\`${ZWSP}\``).doc).toEqual(doc(run("```")));
+    expect(parseAnsi("`200b`").doc).toEqual(doc(run("`200b`")));
   });
 
   it("returns an empty doc for empty input", () => {

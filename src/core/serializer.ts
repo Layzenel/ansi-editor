@@ -1,5 +1,5 @@
 import { DEFAULT_STYLE, styleEquals, type Doc, type Style } from "./model";
-import { ESC } from "./parser";
+import { ESC, ZWSP } from "./parser";
 
 export interface SerializeOptions {
   /** Wrap into ```ansi … ``` */
@@ -72,7 +72,7 @@ export function transition(cur: Style, next: Style): string {
 }
 
 export function escapeTripleBackticks(text: string): string {
-  return text.replace(/```/g, "`200b`200b`");
+  return text.replace(/```/g, `\`${ZWSP}\`${ZWSP}\``);
 }
 
 function transformText(text: string, opts: SerializeOptions): string {

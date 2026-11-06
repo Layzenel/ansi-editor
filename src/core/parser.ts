@@ -2,6 +2,9 @@ import { normalize, type Doc, type Style, DEFAULT_STYLE } from "./model";
 import { isBgCode, isFgCode } from "./palette";
 
 export const ESC = "\u001b";
+/** Zero-width space used to break ``` inside a block (built from its code point on purpose). */
+export const ZWSP = String.fromCharCode(0x200b);
+const OWN_ESCAPE_RE = new RegExp("`" + ZWSP + "(?=`)", "g");
 
 export interface AnsiBlock {
   /** Offsets of the whole ```ansi … ``` block inside the message. */
@@ -84,7 +87,7 @@ export function parseAnsi(input: string, options: ParseOptions = {}): ParseResul
   let text = input.replace(/\r\n?/g, "\n");
   if (options.literalEscapes) text = text.replace(LITERAL_RE, ESC);
   // Undo our own triple-backtick escaping (zero-width spaces between backticks).
-  text = text.replace(/`200b(?=`)/g, "`");
+  text = text.replace(OWN_ESCAPE_RE, "`");
 
   const warnings: ParseWarnings = { unsupportedCodes: 0, strippedSequences: 0 };
   const doc: Doc = [];

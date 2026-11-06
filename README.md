@@ -6,7 +6,7 @@
 
 ## Установка
 
-1. Скачайте `AnsiEditor.plugin.js` (папка `dist/` после сборки).
+1. Скачайте [`AnsiEditor.plugin.js`](AnsiEditor.plugin.js) из корня репозитория.
 2. Положите файл в папку плагинов BetterDiscord:
    - Windows: `%APPDATA%\BetterDiscord\plugins`
    - macOS: `~/Library/Application Support/BetterDiscord/plugins`
@@ -59,7 +59,7 @@
 
 ```bash
 npm install
-npm run build      # dist/AnsiEditor.plugin.js
+npm run build      # AnsiEditor.plugin.js в корне (коммитится — его читает сайт BetterDiscord)
 npm run dev        # watch + копирование в папку плагинов BD (BD_PLUGINS_DIR переопределяет путь)
 npm run deploy     # одна сборка + копирование
 npm test           # Vitest, только src/core
